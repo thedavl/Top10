@@ -1,0 +1,22 @@
+{
+  "name": "top10",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thedavl/Top10.git"
+  },
+  "author": "David Lee",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thedavl/Top10/issues"
+  },
+  "homepage": "https://github.com/thedavl/Top10#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
