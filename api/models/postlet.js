@@ -5,6 +5,7 @@ const postletSchema = mongoose.Schema({
     numbering: { type: Number, required: true },
     title: { type: String },
     description: { type: String },
+    postletImage: { type: String },
     postId: { type:  mongoose.Schema.Types.ObjectId, ref: 'Post' }
 })
 

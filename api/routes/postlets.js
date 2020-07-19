@@ -1,23 +1,52 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: (req, file, callback) =>  {
+        callback(null, './uploads');
+    },
+    filename: (req, file, callback) => {
+        callback(null, Date.now() + file.originalname);
+    }
+})
+
+const fileFilter = (req, file, callback) => {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        callback(null, true);
+    } else {
+        callback(null, false);
+        // or pass back an error
+        // callback(new Error('Filetype not allowed', false))
+    }
+};
+
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 5
+    },
+    fileFilter: fileFilter
+});
 
 const Postlet = require('../models/postlet');
 const Post = require('../models/post');
 
 router.get('/', (req, res, next) => {
     Postlet.find()
-        .select('numbering title description _id postId')
+        .select('numbering title description _id postletImage postId')
         .exec()
         .then(docs => {
             const response = {
                 count: docs.length,
                 posts: docs.map(doc => {
                     return {
+                        _id: doc._id,
                         numbering: doc.numbering,
                         title: doc.title,
                         description: doc.description,
-                        _id: doc._id,
+                        postletImage: doc.postletImage,
                         postId: doc.postId,
                         request: {
                             type: 'GET',
@@ -36,12 +65,14 @@ router.get('/', (req, res, next) => {
         });
 });
 
-router.post('/', (req, res, next) => {
+router.post('/', upload.single('postletImage'), (req, res, next) => {
+    console.log(req.file);
     const postletItem = new Postlet({
         _id: new mongoose.Types.ObjectId(),
         numbering: req.body.numbering,
         title: req.body.title,
         description: req.body.description,
+        postletImage: req.file.path,
         postId: req.body.postId
     });
     const id = req.body.postId;
@@ -55,10 +86,12 @@ router.post('/', (req, res, next) => {
                     post.save()
                     res.status(201).json({
                         message: 'Postlet created successfully',
-                        createdPost: {
+                        createdPostlet: {
+                            _id: result._id,
+                            numbering: result.numbering,
                             title: result.title,
                             description: result.description,
-                            _id: result._id,
+                            postletImage: result.postletImage,
                             postId: result.postId,
                             request: {
                                 type: 'GET',
@@ -82,7 +115,7 @@ router.post('/', (req, res, next) => {
 router.get('/:postletId', (req, res, next) => {
     const id = req.params.postletId;
     Postlet.findById(id)
-        .select('numbering title description _id postId')
+        .select('numbering title description _id postletImage postId')
         .exec()
         .then(doc => {
             console.log("From Database", doc);
