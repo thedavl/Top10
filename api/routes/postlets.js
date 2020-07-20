@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const multer = require('multer');
+const checkAuth = require('../middleware/check-auth');
 
 const storage = multer.diskStorage({
     destination: (req, file, callback) =>  {
@@ -65,7 +66,7 @@ router.get('/', (req, res, next) => {
         });
 });
 
-router.post('/', upload.single('postletImage'), (req, res, next) => {
+router.post('/', checkAuth, upload.single('postletImage'), (req, res, next) => {
     console.log(req.file);
     const postletItem = new Postlet({
         _id: new mongoose.Types.ObjectId(),
@@ -131,7 +132,7 @@ router.get('/:postletId', (req, res, next) => {
         });
 });
 
-router.patch('/:postletId', (req, res, next) => {
+router.patch('/:postletId', checkAuth, (req, res, next) => {
     const id = req.params.postletId;
     Postlet.update({ _id: id }, { $set: req.body })
         .exec()
@@ -151,7 +152,7 @@ router.patch('/:postletId', (req, res, next) => {
         });
 });
 
-router.delete('/:postletId', (req, res, next) => {
+router.delete('/:postletId', checkAuth, (req, res, next) => {
     const id = req.params.postletId;
     Postlet.findById(id)
         .exec()

@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 
 const postRoutes = require('./api/routes/posts');
 const postletRoutes = require('./api/routes/postlets');
+const userRoutes = require('./api/routes/users');
 
 mongoose.connect(
     'mongodb+srv://top10admin:' + 
@@ -39,6 +40,7 @@ app.use((req, res, next) => {
 
 app.use('/posts', postRoutes);
 app.use('/postlets', postletRoutes);
+app.use('/user', userRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not found');

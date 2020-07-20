@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const checkAuth = require('../middleware/check-auth');
 
 const Post = require('../models/post');
 const Postlet = require('../models/postlet');
@@ -35,7 +36,7 @@ router.get('/', (req, res, next) => {
         });
 });
 
-router.post('/', (req, res, next) => {
+router.post('/', checkAuth, (req, res, next) => {
     const postItem = new Post({
         _id: new mongoose.Types.ObjectId(),
         title: req.body.title,
@@ -88,7 +89,7 @@ router.get('/:postId', (req, res, next) => {
         });
 });
 
-router.patch('/:postId', (req, res, next) => {
+router.patch('/:postId', checkAuth, (req, res, next) => {
     const id = req.params.postId;
     Post.update({ _id: id }, { $set: req.body })
         .exec()
@@ -108,7 +109,7 @@ router.patch('/:postId', (req, res, next) => {
         });
 });
 
-router.delete('/:postId', (req, res, next) => {
+router.delete('/:postId', checkAuth, (req, res, next) => {
     const id = req.params.postId;
     Post.findById(id)
         .select('postlets')

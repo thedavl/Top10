@@ -1,5 +1,6 @@
 {
     "env": {
-        "MONGO_ATLAS_PW": "top10boats"
+        "MONGO_ATLAS_PW": "top10boats",
+        "JWT_KEY": "secret"
     }
 }
