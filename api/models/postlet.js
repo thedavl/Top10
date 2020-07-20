@@ -6,7 +6,7 @@ const postletSchema = mongoose.Schema({
     title: { type: String },
     description: { type: String },
     postletImage: { type: String },
-    postId: { type:  mongoose.Schema.Types.ObjectId, ref: 'Post' }
+    postId: { type:  mongoose.Schema.Types.ObjectId, ref: 'Post', required: true }
 })
 
 module.exports = mongoose.model('Postlet', postletSchema);

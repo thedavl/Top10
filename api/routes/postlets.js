@@ -67,7 +67,6 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', checkAuth, upload.single('postletImage'), (req, res, next) => {
-    console.log(req.file);
     const postletItem = new Postlet({
         _id: new mongoose.Types.ObjectId(),
         numbering: req.body.numbering,
@@ -132,8 +131,11 @@ router.get('/:postletId', (req, res, next) => {
         });
 });
 
-router.patch('/:postletId', checkAuth, (req, res, next) => {
+router.patch('/:postletId', checkAuth, upload.single('postletImage'), (req, res, next) => {
     const id = req.params.postletId;
+    if (req.file != undefined) {
+        req.body['postletImage'] = req.file.path;
+    }
     Postlet.update({ _id: id }, { $set: req.body })
         .exec()
         .then(result => {
