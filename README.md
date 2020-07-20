@@ -53,4 +53,34 @@ All restricted endpoints must include a `Bearer <token>` in the Auth header
         - `DELETE`
             - Restricted
             - Deletes the given postlet
-- /user
+- `/user`
+    - `GET`
+        - Unrestricted
+        - Returns all users and their emails
+    - `/user/signup`
+        - Unrestricted
+        - **Takes JSON body**
+        - Signs the user up
+        - Example body: 
+            ```
+                {
+                    "Email": "test@test.com" <required>,
+                    "Password": "pword" <required>
+                }
+            ```
+    - `/user/login`
+        - Unrestricted
+        - **Takes JSON body**
+        - Returns a JWT Auth token to be included in all further requests
+          in the header, such as `Authorization`: `Bearer <token>`
+        - Example body: 
+            ```
+                {
+                    "Email": "test@test.com" <required>,
+                    "Password": "pword" <required>
+                }
+            ```
+    - `/user/<userId>`
+        - `DELETE`
+            - Restricted
+            - Deletes the given user, ONLY if logged in (using the auth token) of the user
